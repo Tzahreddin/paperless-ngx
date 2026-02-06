@@ -334,6 +334,7 @@ INSTALLED_APPS = [
     "allauth.mfa",
     "drf_spectacular",
     "drf_spectacular_sidecar",
+    "treenode",
     *env_apps,
 ]
 
@@ -921,7 +922,7 @@ CELERY_ACCEPT_CONTENT = ["application/json", "application/x-python-serialize"]
 CELERY_BEAT_SCHEDULE = _parse_beat_schedule()
 
 # https://docs.celeryq.dev/en/stable/userguide/configuration.html#beat-schedule-filename
-CELERY_BEAT_SCHEDULE_FILENAME = DATA_DIR / "celerybeat-schedule.db"
+CELERY_BEAT_SCHEDULE_FILENAME = str(DATA_DIR / "celerybeat-schedule.db")
 
 
 # Cachalot: Database read cache.
@@ -1002,6 +1003,18 @@ THREADS_PER_WORKER = os.getenv(
 # Paperless Specific Settings                                                 #
 ###############################################################################
 
+IGNORABLE_FILES: Final[list[str]] = [
+    ".DS_Store",
+    ".DS_STORE",
+    "._*",
+    ".stfolder/*",
+    ".stversions/*",
+    ".localized/*",
+    "desktop.ini",
+    "@eaDir/*",
+    "Thumbs.db",
+]
+
 CONSUMER_POLLING = int(os.getenv("PAPERLESS_CONSUMER_POLLING", 0))
 
 CONSUMER_POLLING_DELAY = int(os.getenv("PAPERLESS_CONSUMER_POLLING_DELAY", 5))
@@ -1024,7 +1037,7 @@ CONSUMER_IGNORE_PATTERNS = list(
     json.loads(
         os.getenv(
             "PAPERLESS_CONSUMER_IGNORE_PATTERNS",
-            '[".DS_Store", ".DS_STORE", "._*", ".stfolder/*", ".stversions/*", ".localized/*", "desktop.ini", "@eaDir/*", "Thumbs.db"]',
+            json.dumps(IGNORABLE_FILES),
         ),
     ),
 )
