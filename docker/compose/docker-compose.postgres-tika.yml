@@ -56,9 +56,9 @@ services:
     volumes:
       - data:/usr/src/paperless/data
       - media:/usr/src/paperless/media
-      - ./export:/usr/src/paperless/export
-      - ./consume:/usr/src/paperless/consume
-    env_file: docker-compose.env
+      - export:/usr/src/paperless/export
+      - consume:/usr/src/paperless/consume
+    env_file: dok-assist.env
     environment:
       PAPERLESS_REDIS: redis://broker:6379
       PAPERLESS_DBHOST: db
@@ -78,7 +78,39 @@ services:
     image: docker.io/apache/tika:latest
     restart: unless-stopped
 volumes:
+  consume:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /Users/thomaszahreddin/Documents/Dok-assist/consume 
   data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /Users/thomaszahreddin/Documents/Dok-assist/data
+  export:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /Users/thomaszahreddin/Documents/Dok-assist/export
   media:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /Users/thomaszahreddin/Documents/Dok-assist/media     
   pgdata:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /Users/thomaszahreddin/Documents/Dok-assist/pgdata
   redisdata:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /Users/thomaszahreddin/Documents/Dok-assist/redisdata
